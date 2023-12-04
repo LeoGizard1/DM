@@ -8,9 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.leogizard.todo.R
+import com.leogizard.todo.databinding.FragmentTaskListBinding
 import java.util.UUID
 
+
 class TaskListFragment : Fragment() {
+
+    private var _binding: FragmentTaskListBinding ?= null
+    private val binding get() = _binding!!
 
     private var taskList = listOf(
         Task(id = "id_1", title = "Task 1", description = "description 1"),
@@ -24,14 +29,15 @@ class TaskListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentTaskListBinding.inflate(inflater, container,false)
+        val view = binding.root
         adapter.submitList(taskList)
-        val rootView = inflater.inflate(R.layout.fragment_task_list, container, false)
-        return rootView
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.tasklist_recyclerview)
-        val button = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val recyclerView = binding.tasklistRecyclerview
+        val button = binding.floatingActionButton
         button.setOnClickListener {
             val newTask =
                 Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
