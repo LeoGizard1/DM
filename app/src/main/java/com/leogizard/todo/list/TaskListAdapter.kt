@@ -4,11 +4,13 @@ import android.accessibilityservice.AccessibilityService.TakeScreenshotCallback
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.leogizard.todo.R
+import com.leogizard.todo.databinding.FragmentTaskListBinding
 
 object TasksDiffCallback : DiffUtil.ItemCallback<Task>() {
     override fun areItemsTheSame(oldItem: Task, newItem: Task) : Boolean {
@@ -22,11 +24,13 @@ object TasksDiffCallback : DiffUtil.ItemCallback<Task>() {
 
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TasksDiffCallback){
 
+    var onClickDelete: (Task) -> Unit = {}
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
       fun bind(task: Task){
           itemView.findViewById<TextView>(R.id.task_title).text = task.title
           itemView.findViewById<TextView>(R.id.task_description).text = task.description
+          itemView.findViewById<ImageButton>(R.id.delete_task_button).setOnClickListener {onClickDelete(task)}
       }
     }
 

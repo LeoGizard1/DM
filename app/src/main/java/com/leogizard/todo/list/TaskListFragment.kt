@@ -38,6 +38,10 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = binding.tasklistRecyclerview
         val button = binding.floatingActionButton
+        adapter.onClickDelete =  { task ->
+            taskList = taskList - task
+            adapter.submitList(taskList)
+        }
         button.setOnClickListener {
             val newTask =
                 Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")

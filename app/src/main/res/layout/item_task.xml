@@ -4,7 +4,6 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -19,6 +18,15 @@
             android:id="@+id/task_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:id="@+id/delete_task_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="delete"
+            />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
