@@ -1,6 +1,13 @@
 package com.leogizard.todo.list
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
-
-data class Task (val id : String, val title: String, val description: String = "") : Serializable
+@Serializable
+data class Task (
+    @SerialName("id")
+    val id : String,
+    @SerialName("content")
+    val title: String,
+    @SerialName("description")
+    val description: String = "") : java.io.Serializable
