@@ -1,14 +1,17 @@
 package com.leogizard.todo.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.leogizard.todo.R
 import com.leogizard.todo.databinding.FragmentTaskListBinding
+import com.leogizard.todo.detail.DetailActivity
 import java.util.UUID
 
 
@@ -16,6 +19,20 @@ class TaskListFragment : Fragment() {
 
     private var _binding: FragmentTaskListBinding ?= null
     private val binding get() = _binding!!
+
+    val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        result ->
+        val task = result.data?.getSerializableExtra("task") as Task?
+        taskList = taskList + task!!
+        adapter.submitList(taskList)
+    }
+
+    val editTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        result ->
+        val task = result.data?.getSerializableExtra("task") as Task
+        taskList = taskList.map { if (it.id == task.id) task else it }
+        adapter.submitList(taskList)
+    }
 
     private var taskList = listOf(
         Task(id = "id_1", title = "Task 1", description = "description 1"),
@@ -37,17 +54,22 @@ class TaskListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = binding.tasklistRecyclerview
-        val button = binding.floatingActionButton
+        val addButton = binding.floatingActionButton
         adapter.onClickDelete =  { task ->
             taskList = taskList - task
             adapter.submitList(taskList)
         }
-        button.setOnClickListener {
-            val newTask =
-                Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
-            taskList = taskList + newTask
-            adapter.submitList(taskList)
+        adapter.onClickEdit = { task ->
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("task",task)
+            editTask.launch(intent)
+
         }
+        addButton.setOnClickListener {
+            val intent = Intent(context, DetailActivity::class.java)
+            createTask.launch(intent)
+        }
+
         recyclerView.adapter = adapter
     }
 }

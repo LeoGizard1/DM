@@ -27,6 +27,13 @@
             android:contentDescription="delete"
             />
 
+        <ImageButton
+            android:id="@+id/edit_task_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_menu_edit"
+            android:contentDescription="edit"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
