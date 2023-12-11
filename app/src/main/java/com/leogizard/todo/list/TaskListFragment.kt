@@ -39,7 +39,20 @@ class TaskListFragment : Fragment() {
         Task(id = "id_2", title = "Task 2"),
         Task(id = "id_3", title = "Task 3")
     )
-    private val adapter = TaskListAdapter()
+
+    val adapterListener: TaskListListener = object : TaskListListener {
+        override fun onClickDelete(task: Task) {
+            taskList = taskList - task
+            adapter.submitList(taskList)
+        }
+
+        override fun onClickEdit(task: Task) {
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("task",task)
+            editTask.launch(intent)
+        }
+    }
+    private val adapter = TaskListAdapter(adapterListener)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,16 +68,6 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = binding.tasklistRecyclerview
         val addButton = binding.floatingActionButton
-        adapter.onClickDelete =  { task ->
-            taskList = taskList - task
-            adapter.submitList(taskList)
-        }
-        adapter.onClickEdit = { task ->
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("task",task)
-            editTask.launch(intent)
-
-        }
         addButton.setOnClickListener {
             val intent = Intent(context, DetailActivity::class.java)
             createTask.launch(intent)

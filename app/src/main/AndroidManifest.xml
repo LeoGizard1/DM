@@ -24,7 +24,7 @@
             android:theme="@style/Theme.TODOLeoGizard" />
         <activity
             android:name=".list.DetailActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
