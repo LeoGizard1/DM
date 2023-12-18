@@ -9,15 +9,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import coil.load
 import com.leogizard.todo.R
 import com.leogizard.todo.data.Api
 import com.leogizard.todo.data.TaskListViewModel
 import com.leogizard.todo.databinding.FragmentTaskListBinding
 import com.leogizard.todo.detail.DetailActivity
+import com.leogizard.todo.user.UserActivity
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 
 class TaskListFragment : Fragment() {
@@ -38,6 +37,7 @@ class TaskListFragment : Fragment() {
         val task = result.data?.getSerializableExtra("task") as Task
         viewModel.update(task)
     }
+
 
 
     val adapterListener: TaskListListener = object : TaskListListener {
@@ -70,6 +70,10 @@ class TaskListFragment : Fragment() {
             val intent = Intent(context, DetailActivity::class.java)
             createTask.launch(intent)
         }
+        binding.userPic.setOnClickListener{
+            val intent = Intent(context, UserActivity::class.java)
+            startActivity(intent)
+        }
 
         recyclerView.adapter = adapter
         lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
@@ -86,6 +90,9 @@ class TaskListFragment : Fragment() {
         lifecycleScope.launch {
             val user = Api.userWebService.fetchUser().body()!!
             binding.user.text = user.name
+            binding.userPic.load(user.avatar) {
+                error(R.drawable.ic_launcher_background) // image par défaut en cas d'erreur
+            }
         }
         viewModel.refresh() // on demande de rafraîchir les données sans attendre le retour directement
     }
